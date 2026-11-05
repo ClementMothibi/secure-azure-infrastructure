@@ -2,26 +2,34 @@
 
 A zero-budget, junior cloud engineer portfolio project that documents a secure Azure web environment. The free version focuses on architecture, Infrastructure as Code (Bicep), local validation, security design, and interview-ready documentation. It does **not** claim that Azure resources have been deployed.
 
-## 1. Project scenario
+## Project scenario
+This project demonstrates the design and implementation planning of a secure Microsoft Azure cloud infrastructure environment.
 
-A fictional small business needs a website hosted on a Linux virtual machine, secure network access, cloud storage for files and backups, identity-based access management, and monitoring.
+The objective is to demonstrate practical knowledge of Azure networking, cloud security, identity and access management, storage security, monitoring, and Infrastructure as Code using Bicep.
 
-## 2. Architecture
+Project Type: Azure Cloud Engineering Portfolio
+Cloud Platform: Microsoft Azure
+Infrastructure as Code: Azure Bicep
+Operating System: Ubuntu Linux
+Web Server: Nginx
+
+## Architecture
 
 ![Secure Azure architecture](architecture/architecture.png)
 
 Planned components:
-- Resource group: `rg-secure-web-dev`
-- Virtual network: `vnet-secure-web` (`10.10.0.0/16`)
-- Subnet: `snet-web` (`10.10.1.0/24`)
-- Network Security Group: `nsg-web`
-- Linux VM: `vm-secure-web-01` (Ubuntu + Nginx)
-- Azure Storage Account: private blob storage for site files, logs, and backups
-- Microsoft Entra ID and Azure RBAC: identity and permissions
-- Azure Monitor: metrics and alerting design
-- Bicep: infrastructure definition
+The proposed infrastructure includes:
 
-## 3. What each service does
+-Azure Virtual Network (VNet)
+-Network Security Group (NSG)
+-Ubuntu Linux Virtual Machine
+-Nginx web server
+-Azure Storage Account
+-Microsoft Entra ID and Azure RBAC
+-Azure Monitor and alerts
+-Bicep infrastructure template
+
+## What each service does
 
 | Service | Purpose |
 |---|---|
@@ -36,13 +44,13 @@ Planned components:
 | Azure Monitor | Collects metrics and supports alerts |
 | Bicep | Declarative Infrastructure as Code |
 
-## 4. Network security
+## Network security
 
 See [`security/security-rules.md`](security/security-rules.md).
 
 The intended policy permits web traffic on TCP 80 and 443, and restricts SSH (TCP 22) to a trusted administrator IP range. RDP is not required for this Linux VM. Port 443 requires TLS configuration; an NSG rule alone does not configure HTTPS.
 
-## 5. Identity and access management
+## Identity and access management
 
 Use Microsoft Entra ID for identities and Azure RBAC for authorisation:
 - Owner: project administrator only; use sparingly.
@@ -51,7 +59,7 @@ Use Microsoft Entra ID for identities and Azure RBAC for authorisation:
 
 Assign roles at the narrowest appropriate scope (for example, the project resource group). Prefer least privilege, review assignments regularly, and use MFA for interactive accounts. Do not share accounts or store credentials in this repository.
 
-## 6. Monitoring and troubleshooting
+## Monitoring and troubleshooting
 
 Monitoring design:
 - Inspect VM metrics such as Percentage CPU.
@@ -64,13 +72,13 @@ Monitoring design:
 
 Azure Monitor, log ingestion, diagnostic settings, and alert notifications can incur costs. Check pricing before enabling paid ingestion or advanced monitoring. These are design and troubleshooting instructions, not evidence of a live test.
 
-## 7. Bicep template
+## Bicep template
 
 The template is in [`infrastructure/main.bicep`](infrastructure/main.bicep). It defines the NSG, VNet/subnet, public IP, NIC, Linux VM, and Storage Account. It accepts parameters for the storage account name, trusted SSH source prefix, admin username, SSH public key, region, and VM size.
 
 The template is a starting point for learning. Review the selected VM size and Ubuntu image availability in your target region before any deployment. A Standard public IP, VM, disks, and storage can incur charges.
 
-## 8. Local validation
+## Local validation
 
 Requirements: Azure CLI with Bicep support.
 
@@ -83,7 +91,7 @@ bash scripts/validate.sh
 
 This compiles the template locally. Compilation is not the same as a successful Azure deployment. A live deployment also requires an active subscription, permissions, regional capacity, valid parameter values, and budget approval.
 
-## 9. Repository layout
+## Repository layout
 
 ```text
 secure-azure-infrastructure/
@@ -99,22 +107,3 @@ secure-azure-infrastructure/
 └── screenshots/
 ```
 
-Add genuine screenshots to `screenshots/` as you complete local work or any future live deployment. Do not label mockups as Azure deployment evidence.
-
-## 10. Interview explanation
-
-"I designed a secure Azure web infrastructure for a fictional small business. The architecture uses a virtual network, subnet, and Network Security Group to control network access. A planned Ubuntu virtual machine hosts an Nginx website, while a Storage Account holds files and backups. Microsoft Entra ID and Azure RBAC provide identity and least-privilege access management. Azure Monitor is included in the monitoring design, and Bicep defines the infrastructure as code. In the zero-budget version, I built the architecture, documented the controls, and validated the Bicep template locally rather than claiming a live Azure deployment."
-
-## 11. Project status and evidence
-
-Use honest status labels:
-- **Designed**: architecture or configuration is documented.
-- **Locally validated**: code or files were checked locally.
-- **Deployed**: resource was successfully created in Azure.
-- **Tested**: the behaviour was actually tested, with evidence.
-
-Do not claim a resource is deployed or a security test passed unless you have performed that deployment or test.
-
-## 12. Cost and cleanup
-
-This version is designed to be completed without deploying paid Azure resources. If you later use Azure credit, estimate costs first, monitor Cost Management, and delete resources when finished. Budgets and alerts are not guaranteed spending caps.
